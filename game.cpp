@@ -306,8 +306,8 @@ void game::spawn() {
 	// выбираем координаты случайной €чейки из числа свободных...
 	position = rand() % counter;
 
-	// ... и помещаем в неЄ число 2 или 4 с веро€тностью 2 к 8
-	field[emptyCells[position].X][emptyCells[position].Y] = (rand() % 9 > 7 ? 4 : 2);
+	// ... и помещаем в неЄ число 2 или 4 с веро€тностью 1 к 9
+	field[emptyCells[position].X][emptyCells[position].Y] = (rand() % 9 > 8 ? 4 : 2);
 
 	if (counter == 1) {
 		// была 1 свободна€ €чейка, после генерации в неЄ числа, 
