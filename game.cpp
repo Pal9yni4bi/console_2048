@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "time.h"  // для настоящей случайности srand
-#include "game.h"
 #include "consoleColor.h"
 
 game::game()
