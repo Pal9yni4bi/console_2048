@@ -206,6 +206,7 @@ void game::render() {
 
 	for (i = 0; i < FIELD_SIZE; i++) {
 		for (y = 0; y < FIELD_SIZE; y++) {
+			// устанавливаем курсор в нужную ячейку, выбираем цвет и выводим число
 			cursorCoord.X = 2 + y * 6;
 			cursorCoord.Y = 2 + i * 4;
 			SetConsoleCursorPosition(consoleHandle, cursorCoord);
@@ -273,9 +274,7 @@ void game::render() {
 		cursorCoord.Y = 20;
 		SetConsoleCursorPosition(consoleHandle, cursorCoord);
 		puts("The end, you lose!");
-		isGameActive = false;
 	} else if (isWin) {
-		isGameActive = false;
 		cursorCoord.X = 7;
 		cursorCoord.Y = 20;
 		SetConsoleCursorPosition(consoleHandle, cursorCoord);
@@ -322,9 +321,9 @@ void game::spawn() {
 */
 void game::checkForWin(unsigned short number) {
 
-	if (number == 2048) {
+	if (number == 2048) { // условием победы является достижение значения 2048
 		isWin = true;
-		isGameActive = false;
+		isGameActive = false; // останавливаем игру
 	}
 
 }
@@ -336,16 +335,16 @@ void game::checkForFail() {
 
 	unsigned short i, y; // итераторы
 
-	isFail = true;
-
 	// проверяем наличие свобоных ходов, сравнивая значения всех соседних ячеек
 	for (i = 0; i < FIELD_SIZE; i++) { 
 		for (y = 0; y < FIELD_SIZE; y++) {
 			if (i < FIELD_SIZE - 1 && field[i][y] == field[i + 1][y]
 				|| y < FIELD_SIZE - 1 && field[i][y] == field[i][y + 1]) {
-				isFail = false;
-				return; // есть как минимум 1 возможный ход, прерываем дальнейший поиск
+				return; // достаточно одного возможного хода, прерываем дальнейший поиск
 			}
 		}
 	}
+
+	isFail = true; // ходов не найдено, условия поражения соблюдены
+	isGameActive = false; // если ходов не найдено, останавливаем игру
 }
