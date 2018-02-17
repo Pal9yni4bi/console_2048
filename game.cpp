@@ -6,7 +6,7 @@ game::game()
 {
 	system("cls"); // очистим консоль на случай, если ранее был вывод
 	srand(time(0)); // обеспечиваем случайный результат функции rand
-	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE); // получаем управление выводом в консоль
 	// убираем моргание каретки ввода
 	CONSOLE_CURSOR_INFO structCursorInfo;
 	GetConsoleCursorInfo(consoleHandle, &structCursorInfo);
@@ -36,9 +36,11 @@ game::game()
 	puts("Score: 0\n\n");
 	puts("Press arrows for play, press Q for exit.");
 
+	// размезщаем 2 стартовых элемента в пустые €чейки
 	game::spawn();
 	game::spawn();
 
+	// отрисовываем произошедшие изменени€
 	game::render();
 }
 
@@ -181,20 +183,20 @@ bool game::checkAndCollapse(unsigned short *from, unsigned short *to, bool *isSm
 		*from = 0; // убираем значение из €чейки-донора
 		score += *to; // увеличиваем игровой счЄт
 		game::checkForWin(*to); // провер€ем, достигнуто ли условие победы
-		return true; // предотвращаем повторное коллапсирование текущей €чейки
+		return true; // предотвращаем повторное коллапсирование текущей €чейки, сообща€, что дальнейший поиск не нужен
 	}
 	else if (*from > 0) { // соседн€€ €чейка не равна провер€емой и не пуста: дальнейший поиск пары лишЄн смысла
 		return true;
 	}
 
-	return false;
+	return false; // возврат false свидетельствует о том, что можно продолжать поиск €чейки дл€ объединени€
 }
 
 void game::alignToBorder(unsigned short *from, unsigned short *to, bool *isSmthChanged) {
 	if (*to == 0) {
 		*isSmthChanged = true; // фиксируем факт изменений на игровом поле
-		*to = *from;
-		*from = 0;
+		*to = *from; // перемещаем значение
+		*from = 0; // очищаем исходную €чейку
 	}
 }
 
@@ -256,13 +258,14 @@ void game::render() {
 				SetConsoleTextAttribute(consoleHandle, ConsoleColor_Magenta);
 				puts("2048");
 				break;
-			default: // будет отрабатывать, когда €чейка пуста
+			default: // будет отрабатывать, когда €чейка пуста, затира€ старое значение
 				puts("    ");
 				break;
 			}
 		}
 	}
 
+	// выводим счЄт:
 	cursorCoord.X = 7;
 	cursorCoord.Y = 19;
 	SetConsoleCursorPosition(consoleHandle, cursorCoord);
@@ -270,11 +273,13 @@ void game::render() {
 	printf("%d", score);
 
 	if (isFail) {
+		// если наступило поражение Ч сообщаем об этом
 		cursorCoord.X = 7;
 		cursorCoord.Y = 20;
 		SetConsoleCursorPosition(consoleHandle, cursorCoord);
 		puts("The end, you lose!");
 	} else if (isWin) {
+		// если достигнута победа Ч сообщаем об этом
 		cursorCoord.X = 7;
 		cursorCoord.Y = 20;
 		SetConsoleCursorPosition(consoleHandle, cursorCoord);
@@ -295,8 +300,7 @@ void game::spawn() {
 			if (field[i][y] == 0) {
 				// запоминаем координаты пустой €чейки
 				emptyCells[counter].X = i;
-				emptyCells[counter].Y = y; // и увеличиваем счЄтчик пустых €чеек
-				counter++;
+				emptyCells[counter++].Y = y; // и увеличиваем счЄтчик пустых €чеек
 			}
 		}
 	}
@@ -322,7 +326,7 @@ void game::spawn() {
 void game::checkForWin(unsigned short number) {
 
 	if (number == 2048) { // условием победы €вл€етс€ достижение значени€ 2048
-		isWin = true;
+		isWin = true; // поднимаем флаг, указывающий на достижение победы
 		isGameActive = false; // останавливаем игру
 	}
 
